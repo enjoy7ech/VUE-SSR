@@ -1,11 +1,7 @@
 import { createApp } from './app'
 
-const isDev = process.env.NODE_ENV !== 'production'
-
 export default context => {
-
   return new Promise((resolve, reject) => {
-    const s = isDev && Date.now()
     const { app, router, store } = createApp()
 
     const { url, req } = context
@@ -30,7 +26,6 @@ export default context => {
         route: router.currentRoute,
         req
       }))).then(() => {
-        isDev && console.log(`data pre-fetch: ${Date.now() - s}ms`)
         // 在所有预取钩子(preFetch hook) resolve 后，
         // 我们的 store 现在已经填充入渲染应用程序所需的状态。
         // 当我们将状态附加到上下文，

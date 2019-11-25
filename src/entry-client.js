@@ -1,5 +1,5 @@
 import { createApp } from './app'
-import { mixins } from "./mixin"
+import { mixins } from './mixin'
 import Vue from 'vue'
 
 const { app, router, store } = createApp(true)
@@ -15,7 +15,6 @@ if (window.__INITIAL_STATE__) {
 }
 
 router.onReady(() => {
-
   // 添加路由钩子函数，用于处理 asyncData.
   // 在初始路由 resolve 后执行，
   // 以便我们不会二次预取(double-fetch)已有的数据。
@@ -34,14 +33,11 @@ router.onReady(() => {
       return next()
     }
 
-    console.log(1111111, asyncDataHooks);
-
     Promise.all(asyncDataHooks.map(hook => hook({ store, route: to })))
       .then(() => {
         next()
       })
       .catch(next)
-
   })
 
   // 挂载在DOM上

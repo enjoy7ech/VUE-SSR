@@ -16,11 +16,11 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'public': path.join(process.cwd(), 'public')
+      public: path.join(process.cwd(), 'public')
     }
   },
   module: {
-    noParse: /es6-promise\.js$/,  // avoid webpack shimming process
+    noParse: /es6-promise\.js$/, // avoid webpack shimming process
     rules: [
       {
         test: /\.vue$/,

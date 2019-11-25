@@ -10,7 +10,7 @@ export function createRouter() {
       {
         path: '/',
         component: () => import('../views/home/welcome/index.vue')
-      },
+      }
     ]
   })
 }

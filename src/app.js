@@ -4,8 +4,8 @@ import App from './App.vue'
 import { createRouter } from './router'
 import { createStore } from './store'
 import { sync } from 'vuex-router-sync'
-//css直接被处理到客户端实例里了，而服务端存在白名单因此不对样式处理
-//global components
+// css直接被处理到客户端实例里了，而服务端存在白名单因此不对样式处理
+// global components
 import './views/components'
 
 export function createApp() {

@@ -1,5 +1,4 @@
 const webpack = require('webpack')
-const path = require('path')
 const merge = require('webpack-merge')
 const base = require('./webpack.base')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
@@ -27,15 +26,15 @@ const config = merge(base, {
     // 生成 `vue-ssr-client-manifest.json`
     new VueSSRClientPlugin(),
     new MiniCssExtractPlugin({
-      filename: '[name].[hash:8].css',
+      filename: '[name].[hash:8].css'
     })
   ] : [
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-        'process.env.VUE_ENV': '"client"'
-      }),
-      new VueSSRClientPlugin(),
-    ],
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      'process.env.VUE_ENV': '"client"'
+    }),
+    new VueSSRClientPlugin()
+  ],
   optimization: {
     // 重要信息：这将 webpack 运行时分离到一个引导 chunk 中，
     // 以便可以在之后正确注入异步 chunk。

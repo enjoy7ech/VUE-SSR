@@ -8,7 +8,9 @@ module.exports = {
   'parserOptions': {
     'sourceType': 'module'
   },
-  'extends': 'semistandard',
+  'extends': [
+    'semistandard'
+  ],
   'plugins': [
     'html'
   ],
@@ -33,7 +35,8 @@ module.exports = {
     'space-before-function-paren': 0,
     'no-multiple-empty-lines': [
       'off'
-    ]
+    ],
+    'prefer-promise-reject-errors': 0
   },
   'globals': {
     '$': true
