@@ -1,0 +1,22 @@
+#header 
+  .top-banner
+    position absolute
+    top 0px
+    width 100%
+    z-index -1
+  .mini-header
+    padding: 10px 24px
+    backdrop-filter blur(7px) brightness(110%);
+    .mini-header-content
+      height 30px
+      position relative
+      &:before
+        position absolute
+        height 100%
+        content ''
+        display inline-block
+        vertical-align middle
+      .item
+        font-size 14px
+        vertical-align middle
+        margin-right 20px
