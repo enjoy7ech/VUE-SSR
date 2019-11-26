@@ -1,10 +1,10 @@
-const path = require('path')
-const webpack = require('webpack')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const { VueLoaderPlugin } = require('vue-loader')
+const path = require('path');
+const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
+const { VueLoaderPlugin } = require('vue-loader');
 
-const isProd = process.env.NODE_ENV === 'production'
+const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
   mode: process.env.NODE_ENV,
@@ -33,9 +33,27 @@ module.exports = {
         }
       },
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
+        test: /\.ts(x)?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/,
+        options: {
+          appendTsSuffixTo: [/\.vue$/],
+          transpileOnly: true,
+          happyPackMode: false
+        }
+      },
+      {
+        test: /\.(js|vue|ts|tsx|jsx)$/,
+        enforce: 'pre',
+        exclude: /node_modules/,
+        loader: 'eslint-loader',
+        options: {
+          fix: false,
+          extensions: ['.js', '.jsx', '.vue', '.ts', '.tsx'],
+          cache: false,
+          emitWarning: true,
+          emitError: false
+        }
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -102,4 +120,4 @@ module.exports = {
       new VueLoaderPlugin(),
       new FriendlyErrorsPlugin()
     ]
-}
+};

@@ -1,2 +1,3 @@
-src/styles/fonts/demo-files/*.*
-src/**/*.vue
+tools/**
+tsconfig.json
+server.js

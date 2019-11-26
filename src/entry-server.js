@@ -8,7 +8,7 @@ export default context => {
     const fullPath = router.resolve(url).route.fullPath
 
     if (fullPath !== url) {
-      return reject({ url: fullPath })
+      return reject(new Error({ url: fullPath }))
     }
     // 切换路由到请求的url
     router.push(url)
@@ -18,7 +18,7 @@ export default context => {
       // 获取该路由相匹配的Vue components
       const matchedComponents = router.getMatchedComponents()
       if (!matchedComponents.length) {
-        reject({ code: 404 })
+        reject(new Error({ code: 404 }))
       }
       // 执行匹配组件中的asyncData
       Promise.all(matchedComponents.map(({ asyncData }) => asyncData && asyncData({

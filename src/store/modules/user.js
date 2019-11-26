@@ -7,7 +7,7 @@ export default {
   actions: {
     getUser: ({ commit }) => {
       return new
-      Promise((resolve, reject) => {
+      Promise((resolve) => {
         setTimeout(() => {
           resolve()
         }, 2000)

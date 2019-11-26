@@ -8,10 +8,10 @@
         <span class="item">游戏中心</span>
       </div>
     </div>
-    <div>{{loginTime}}</div>
-    {{$store.state.user}}
+    <div @click="increment">onClick</div>
+    {{enthusiasm}}
   </div>
 </template>
 
-<script src="./component.ts"></script>
+<script src="./component.ts" lang="ts"></script>
 <style lang="stylus" scoped src="./style.stylus"></style>

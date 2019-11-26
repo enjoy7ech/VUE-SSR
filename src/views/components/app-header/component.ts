@@ -1,20 +1,23 @@
-export default {
+import Vue from 'vue'
+
+export default Vue.extend({
+  props: ['name', 'initialEnthusiasm'],
   data() {
     return {
-      loginTime: ''
+      enthusiasm: 0
     }
   },
-  asyncData({ store }) {
-
+  methods: {
+    increment() { this.enthusiasm++ },
+    decrement() {
+      if (this.enthusiasm > 1) {
+        this.enthusiasm--
+      }
+    }
   },
-  created() {
-    setTimeout(() => {
-
-      this.loginTime = new Date()
-    }, 1000);
-  },
-  mounted() {
-    console.log('mounted!!!')
-
-  },
-}
+  computed: {
+    exclamationMarks(): string {
+      return Array(this.enthusiasm + 1).join('!')
+    }
+  }
+})

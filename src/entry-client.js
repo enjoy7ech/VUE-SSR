@@ -43,4 +43,3 @@ router.onReady(() => {
   // 挂载在DOM上
   app.$mount('#app')
 })
-
