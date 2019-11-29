@@ -18,4 +18,6 @@
     }
   ],
   "vetur.format.defaultFormatter.html": "prettier",
+  "stylusSupremacy.insertColons": false,
+  "stylusSupremacy.insertSemicolons": false,
 }

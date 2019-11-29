@@ -22,6 +22,8 @@ module.exports = {
     $: true
   },
   rules: {
+    //prettier
+    'prettier/prettier': 1,
     // eslint rules
     'one-var': 0,
     'arrow-parens': 0,
@@ -45,11 +47,10 @@ module.exports = {
       'unix'
     ],
     // typescript-eslint rules
-    '@typescript-eslint/indent': ['error', 2],
+    '@typescript-eslint/indent': 'off',
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/no-var-requires': 0,
-    //prettier
-    'prettier/prettier': 1
+    
   }
 }

@@ -10,12 +10,13 @@ const config = merge(base, {
   entry: {
     app: './src/entry-client.js'
   },
-  resolve: {
-    alias: {
-      'create-api': './create-api-client.js'
-    }
-  },
-  plugins: isProd ? [
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jquery: 'jquery',
+      'window.jQuery': 'jquery',
+      jQuery: 'jquery'
+    }),
     // strip dev-only code in Vue source
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
@@ -24,17 +25,16 @@ const config = merge(base, {
     // extract vendor chunks for better caching
     // 此插件在输出目录中
     // 生成 `vue-ssr-client-manifest.json`
-    new VueSSRClientPlugin(),
-    new MiniCssExtractPlugin({
-      filename: '[name].[hash:8].css'
-    })
-  ] : [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-      'process.env.VUE_ENV': '"client"'
-    }),
     new VueSSRClientPlugin()
-  ],
+  ].concat(
+    isProd
+      ? [
+          new MiniCssExtractPlugin({
+            filename: '[name].[hash:8].css'
+          })
+        ]
+      : []
+  ),
   optimization: {
     // 重要信息：这将 webpack 运行时分离到一个引导 chunk 中，
     // 以便可以在之后正确注入异步 chunk。
@@ -46,7 +46,7 @@ const config = merge(base, {
         },
         vendor: {
           name: 'vendor',
-          test: function (module) {
+          test: function(module) {
             // a module is extracted into the vendor chunk if...
             return (
               // it's inside node_modules

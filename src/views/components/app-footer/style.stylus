@@ -1,0 +1,15 @@
+#footer {
+  width 100%
+  position relative
+  position fixed
+  height 60px
+  bottom 0
+  background #558bf7
+
+  .footer-bg {
+    width 125px
+    right 20px
+    top -63px
+    position absolute
+  }
+}

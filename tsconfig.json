@@ -11,12 +11,26 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "allowJs": true,
-    "baseUrl": ".",
-    "types": ["node"],
+    "outDir": "./compiledTs",
+    "baseUrl": "./",
+    "types": [
+      "node",
+      "jquery"
+    ],
     "paths": {
-      "@/*": ["src/*"]
+      "@data/*": [
+        "src/data/*"
+      ],
+      "@/*": [
+        "src/*"
+      ]
     },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
   },
   "include": [
     "src/**/*.ts",
@@ -24,6 +38,8 @@
     "src/**/*.vue"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "tsconfig.json",
+    "tools"
   ]
 }

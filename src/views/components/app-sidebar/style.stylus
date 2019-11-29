@@ -1,0 +1,57 @@
+#sideBar {
+  width 260px
+  height 200vh
+  border 1px solid #ddd
+  background rgba(224, 224, 224, 0.42)
+
+  .sidebar-content {
+    padding 30px 0
+
+    &.fixed {
+      position fixed
+      top 0
+      width 260px
+    }
+  }
+
+  .bar-item {
+    font-size 14px
+
+    .bar-h1 {
+      margin-left 20px
+      padding 8px 10px
+      border-bottom 1px solid #69c7b5
+      border-radius 4px
+
+      &:hover {
+        background #f2fdff
+      }
+
+      .h1-text {
+        font-weight bold
+      }
+
+      .h1-right-tool {
+        float right
+      }
+
+      &.active {
+        background #fff
+      }
+    }
+
+    .bar-h2 {
+      margin-left 30px
+      padding 6px 15px
+      border-left 1px solid #c5c5c5
+
+      .h2-text {
+        color #949292
+      }
+
+      &:hover {
+        background #fff
+      }
+    }
+  }
+}

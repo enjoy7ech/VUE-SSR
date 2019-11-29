@@ -1,5 +1,5 @@
-#header{
-  .top-banner{
+#header {
+  .top-banner {
     width: 100%;
-    }
   }
+}

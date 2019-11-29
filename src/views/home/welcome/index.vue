@@ -1,8 +1,5 @@
 <template>
-  <div>
-    <app-header></app-header>
-    Make a sprite from a texture atlas
-  </div>
+  <default-layout></default-layout>
 </template>
 
 <script src="./component.ts" lang="ts"></script>

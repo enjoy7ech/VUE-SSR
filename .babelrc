@@ -1,8 +1,14 @@
 {
   "presets": [
-    ["@babel/preset-env"]
+    "@babel/preset-env"
   ],
   "plugins": [
-      ["component", { "libraryName": "element-ui", "styleLibraryName": "theme-chalk" }] // `style: true` 会加载 less 文件
-    ]
+    [
+      "component",
+      {
+        "libraryName": "element-ui",
+        "styleLibraryName": "theme-chalk"
+      }
+    ] // `style: true` 会加载 less 文件
+  ]
 }
