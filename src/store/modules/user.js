@@ -6,16 +6,14 @@ export default {
   },
   actions: {
     getUser: ({ commit }) => {
-      return new
-      Promise((resolve) => {
+      return new Promise(resolve => {
         setTimeout(() => {
           resolve()
         }, 2000)
+      }).then(() => {
+        const user = { userId: '00000000', userName: '帅比' }
+        commit('setUser', user)
       })
-        .then(() => {
-          const user = { userId: '00000000', userName: '帅比' }
-          commit('setUser', user)
-        })
     }
   },
   mutations: {

@@ -17,7 +17,9 @@ export default {
       asyncData({
         store: this.$store,
         route: to
-      }).then(next).catch(next)
+      })
+        .then(next)
+        .catch(next)
     } else {
       next()
     }

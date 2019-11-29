@@ -43,17 +43,9 @@ module.exports = {
         }
       },
       {
-        test: /\.(js|vue|ts|tsx|jsx)$/,
-        enforce: 'pre',
+        test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'eslint-loader',
-        options: {
-          fix: false,
-          extensions: ['.js', '.jsx', '.vue', '.ts', '.tsx'],
-          cache: false,
-          emitWarning: true,
-          emitError: false
-        }
+        loader: 'babel-loader'
       },
       {
         test: /\.(png|jpg|gif|svg)$/,

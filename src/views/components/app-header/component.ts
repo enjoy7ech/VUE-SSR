@@ -1,14 +1,27 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  props: ['name', 'initialEnthusiasm'],
+  props: {
+    name: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
       enthusiasm: 0
     }
   },
   methods: {
-    increment() { this.enthusiasm++ },
+    increment() {
+      new Promise(resolve => {
+        setTimeout(() => {
+          this.enthusiasm++
+          console.log('increase!!')
+          resolve()
+        }, 3000)
+      })
+    },
     decrement() {
       if (this.enthusiasm > 1) {
         this.enthusiasm--

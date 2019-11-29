@@ -1,4 +1,5 @@
-#header 
+#header
+  height 125px
   .top-banner
     position absolute
     top 0px
@@ -6,9 +7,9 @@
     z-index -1
   .mini-header
     padding: 10px 24px
-    backdrop-filter blur(7px) brightness(110%);
+    backdrop-filter blur(20px) brightness(110%);
     .mini-header-content
-      height 30px
+      height 26px
       position relative
       &:before
         position absolute
@@ -20,3 +21,4 @@
         font-size 14px
         vertical-align middle
         margin-right 20px
+        cursor pointer

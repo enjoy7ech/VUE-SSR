@@ -20,7 +20,7 @@ export function createApp() {
   const app = new Vue({
     router,
     store,
-    render: (h) => h(App)
+    render: h => h(App)
   })
 
   // 暴露 app, router 和 store。

@@ -8,8 +8,6 @@
         <span class="item">游戏中心</span>
       </div>
     </div>
-    <div @click="increment">onClick</div>
-    {{enthusiasm}}
   </div>
 </template>
 

@@ -5,13 +5,13 @@ module.exports = {
     sourceType: 'module'
   },
   extends: [
-    'plugin:vue/base',
     'plugin:@typescript-eslint/recommended',
     'plugin:vue/essential',
     '@vue/standard',
-    '@vue/typescript'
+    '@vue/typescript',
+    'plugin:prettier/recommended'
   ],
-  plugins: ['vue', '@typescript-eslint'],
+  plugins: ['vue', '@typescript-eslint', 'prettier'],
   env: {
     browser: true,
     node: true,
@@ -48,6 +48,8 @@ module.exports = {
     '@typescript-eslint/indent': ['error', 2],
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/no-explicit-any': 0,
-    '@typescript-eslint/no-var-requires': 0
+    '@typescript-eslint/no-var-requires': 0,
+    //prettier
+    'prettier/prettier': 1
   }
 }
