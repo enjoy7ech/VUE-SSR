@@ -2,13 +2,50 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const base = require('./webpack.base')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const miniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const isProd = process.env.NODE_ENV === 'production'
 
 const config = merge(base, {
   entry: {
     app: './src/entry-client.js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: [
+          isProd ? miniCssExtractPlugin.loader : 'vue-style-loader',
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: [
+                require('autoprefixer')({})
+              ]
+            }
+          }
+        ]
+      },
+      {
+        test: /\.styl(us)?$/,
+        use: [
+          isProd ? miniCssExtractPlugin.loader : 'vue-style-loader',
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: [
+                require('autoprefixer')({})
+              ]
+            }
+          },
+          'stylus-loader'
+        ]
+      }
+    ]
   },
   plugins: [
     new webpack.ProvidePlugin({
@@ -26,11 +63,13 @@ const config = merge(base, {
     // 此插件在输出目录中
     // 生成 `vue-ssr-client-manifest.json`
     new VueSSRClientPlugin()
-  ].concat(
+  ]
+  .concat(
     isProd
       ? [
-          new MiniCssExtractPlugin({
-            filename: '[name].[hash:8].css'
+          new miniCssExtractPlugin({
+            filename: "[name].css",
+            chunkFilename: "[id].css"
           })
         ]
       : []
@@ -39,22 +78,44 @@ const config = merge(base, {
     // 重要信息：这将 webpack 运行时分离到一个引导 chunk 中，
     // 以便可以在之后正确注入异步 chunk。
     // 这也为你的应用程序 /vendor 代码提供了更好的缓存。
+    runtimeChunk: {
+      name: 'runtime'
+    },
     splitChunks: {
-      cacheGroups: {
-        manifest: {
-          name: 'manifest'
-        },
+      // //以下是默认配置
+      // chunks: 'all',
+      // //生成块的最小大小30kb
+      // minSize: 30000,
+      // maxSize: 0,
+      // minChunks: 1,
+      // //按需加载时最大并行请求数
+      // maxAsyncRequests: 5,
+      // //entry point的最大并行请求数
+      // maxInitialRequests: 3,
+      // automaticNameDelimiter: '~',
+      // name: true,
+      cacheGroups: isProd ? {
         vendor: {
           name: 'vendor',
           test: function(module) {
             // a module is extracted into the vendor chunk if...
             return (
               // it's inside node_modules
-              // and not a CSS file (due to extract-text-webpack-plugin limitation)
-              /node_modules/.test(module.context) && !/\.css$/.test(module.request)
+              // and not a CSS file (due to mini-css-extract-plugin limitation)
+              /[\\/]node_modules[\\/]/.test(module.context) && !/\.css$/.test(module.request)
             )
-          }
+          },
+          reuseExistingChunk: true,
+          enforce: true,
+          chunks: "all"
         }
+        // elementUI: {
+        //   name: "chunk-elementUI", // 单独将 elementUI 拆包
+        //   priority: 20, // 权重要大于 libs 和 app 不然会被打包进 libs 或者 app
+        //   test: /[\\/]node_modules[\\/]element-ui[\\/]/
+        // },
+      } : {
+        //dev
       }
     }
   }

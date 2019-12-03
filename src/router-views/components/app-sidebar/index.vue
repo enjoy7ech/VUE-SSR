@@ -1,6 +1,6 @@
 <template>
-  <div id="sideBar" ref="sideBar">
-    <div :class="[fixed && 'fixed', 'sidebar-content']">
+  <div id="sideBar" :class="[fixed && 'fixed']" ref="sideBar">
+    <div class="sidebar-content">
       <div class="bar-item" v-for="(item, index) in menus" :key="index">
         <div class="bar-h1 active">
           <i class="fa fa-circle-o"></i>

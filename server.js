@@ -8,7 +8,7 @@ const microcache = require('route-cache')
 const resolve = file => path.resolve(__dirname, file)
 const { createBundleRenderer } = require('vue-server-renderer')
 
-const isProd = process.env.NODE_ENV === 'production'
+const isProd = process.env.NODE_ENV ? process.env.NODE_ENV === 'production' : true
 const useMicroCache = process.env.MICRO_CACHE !== 'false'
 const serverInfo =
   `express/${require('express/package.json').version} ` +
@@ -106,6 +106,8 @@ function render(req, res) {
     if (err) {
       return handleError(err)
     }
+    console.log(111111111111111111111111111,html);
+    
     res.send(html)
     if (!isProd) {
       console.log(`whole request: ${Date.now() - s}ms`)//eslint-disable-line

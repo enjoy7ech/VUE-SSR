@@ -11,11 +11,13 @@ export default Vue.extend({
     }
   },
   async mounted() {
-    const { default: debounce } = await import('lodash-es/debounce')
+    const { default: debounce } = await import(
+      /* webpackChunkName: "debounce" */
+      'lodash-es/debounce'
+    )
     debounceScroll = debounce(() => {
       const scrollTop = $(window).scrollTop()
-      const offset = $(this.$refs.sideBar).offset()
-      this.fixed = Number(scrollTop) > Number(offset && offset.top)
+      this.fixed = Number(scrollTop) > Number($('#header').innerHeight())
     }, 10)
     $(window).scroll(function() {
       debounceScroll()

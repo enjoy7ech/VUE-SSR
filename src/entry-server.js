@@ -20,6 +20,7 @@ export default context => {
       if (!matchedComponents.length) {
         reject(new Error({ code: 404 }))
       }
+
       // 执行匹配组件中的asyncData
       Promise.all(
         matchedComponents.map(

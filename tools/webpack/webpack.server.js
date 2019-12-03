@@ -17,11 +17,6 @@ module.exports = merge(base, {
     filename: 'server-bundle.js',
     libraryTarget: 'commonjs2'
   },
-  resolve: {
-    alias: {
-      'create-api': './create-api-server.js'
-    }
-  },
   // https://webpack.js.org/configuration/externals/#function
   // https://github.com/liady/webpack-node-externals
   // 外置化应用程序依赖模块。可以使服务器构建速度更快，
@@ -29,8 +24,45 @@ module.exports = merge(base, {
   externals: nodeExternals({
     // 不要外置化 webpack 需要处理的依赖模块。
     // do not externalize CSS files in case we need to import it from a dep
-    whitelist: /\.css$/
+    whitelist: /\.(css|stylus)$/
   }),
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: [
+                require('autoprefixer')({})
+              ]
+            }
+          }
+        ]
+      },
+      {
+        test: /\.styl(us)?$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: [
+                require('autoprefixer')({})
+              ]
+            }
+          },
+          'stylus-loader'
+        ]
+      }
+    ]
+  },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),

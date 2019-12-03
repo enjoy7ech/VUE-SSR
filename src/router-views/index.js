@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import preface from './preface'
 
 Vue.use(Router)
 
@@ -9,7 +10,11 @@ export function createRouter() {
     routes: [
       {
         path: '/',
-        component: () => import('../views/home/welcome/index.vue')
+        component: () => import('./home/welcome/index.vue'),
+        children: [
+          //前言
+          ...preface
+        ]
       }
     ]
   })
