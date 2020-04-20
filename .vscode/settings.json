@@ -20,4 +20,7 @@
   "vetur.format.defaultFormatter.html": "prettier",
   "stylusSupremacy.insertColons": false,
   "stylusSupremacy.insertSemicolons": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
 }
