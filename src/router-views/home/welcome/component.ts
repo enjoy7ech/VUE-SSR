@@ -7,7 +7,7 @@ export default Vue.extend({
     return store.dispatch('user/getUser')
   },
   mounted() {
-    // this.draw()
+    this.draw()
   },
   data() {
     return {}

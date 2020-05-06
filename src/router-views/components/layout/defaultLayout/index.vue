@@ -2,7 +2,9 @@
   <div id="layout-container">
     <app-header></app-header>
     <app-sidebar></app-sidebar>
-    <div id="router-view"></div>
+    <div id="router-view">
+      <router-view></router-view>
+    </div>
     <app-footer></app-footer>
   </div>
 </template>

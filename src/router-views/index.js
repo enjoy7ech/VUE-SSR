@@ -10,11 +10,15 @@ export function createRouter() {
     routes: [
       {
         path: '/',
-        component: () => import('./home/welcome/index.vue'),
+        component: () => import('./layouts/default.vue'),
         children: [
           //前言
           ...preface
         ]
+      },
+      {
+        path: '/home',
+        component: () => import('./home/welcome/index.vue')
       }
     ]
   })

@@ -1,9 +1,7 @@
 <template>
-  <default-layout>
-    <div slot="view">
-      123123
-    </div>
-  </default-layout>
+  <div>
+    12312312s
+  </div>
 </template>
 
 <script src="./component.ts" lang="ts"></script>

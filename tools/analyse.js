@@ -1,6 +1,6 @@
-import webpack from "webpack"
+import webpack from 'webpack'
 import webpackClientConfig from './webpack/webpack.client.js'
-import webpackServerConfig from './webpack/webpack.server.js'
+// import webpackServerConfig from './webpack/webpack.server.js'
 import rimraf from 'rimraf'
 import path from 'path'
 
@@ -15,7 +15,7 @@ async function analyse(params) {
         reject(err)
       } else {
         console.log(stats.toString(webpackClientConfig.stats)) //eslint-disable-line
-        let statsJson = stats.toJson()
+        const statsJson = stats.toJson()
         if (statsJson.errors && statsJson.errors.length) {
           reject(statsJson.errors)
         } else {
@@ -26,4 +26,4 @@ async function analyse(params) {
   })
 }
 
-export default {name:'analyse',func:analyse}
+export default { name: 'analyse', func: analyse }
