@@ -8,12 +8,6 @@ const isProd = process.env.NODE_ENV === 'production'
 module.exports = {
   mode: process.env.NODE_ENV || 'production',
   devtool: isProd ? false : 'cheap-module-source-map',
-  output: {
-    path: path.join(process.cwd(), 'dist'),
-    publicPath: '/dist/',
-    filename: '[name].[chunkhash:8].js',
-    // chunkFilename: '[id].chunk.[hash].js'
-  },
   resolve: {
     alias: {
       public: path.join(process.cwd(), 'public'),
@@ -51,10 +45,10 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        loader: 'file-loader',
+        loader: 'url-loader',
         options: {
-          limit: 10000,
-          name: '[name].[ext]?[hash]'
+          limit: 2048,
+          name: 'image/[name].[ext]?[hash]'
         }
       },
       {
@@ -63,7 +57,7 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: '[path][name].[ext]'
+              name: 'fonts/[name].[ext]'
             }
           }
         ]
@@ -73,14 +67,7 @@ module.exports = {
   performance: {
     hints: false
   },
-  plugins: isProd ? 
-  [
-    new VueLoaderPlugin(),
-    new webpack.optimize.ModuleConcatenationPlugin()
-  ]
-  :
-  [
-    new VueLoaderPlugin(),
-    new FriendlyErrorsPlugin()
-  ]
+  plugins: isProd
+    ? [new VueLoaderPlugin(), new webpack.optimize.ModuleConcatenationPlugin()]
+    : [new VueLoaderPlugin(), new FriendlyErrorsPlugin()]
 }

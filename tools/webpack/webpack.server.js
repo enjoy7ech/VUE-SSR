@@ -1,7 +1,9 @@
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const base = require('./webpack.base')
+const path = require('path')
 const nodeExternals = require('webpack-node-externals')
+const wpSetting = require('./config/webpack.setting')
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
 
 module.exports = merge(base, {
@@ -14,6 +16,7 @@ module.exports = merge(base, {
   entry: './src/entry-server.js',
   // 此处告知 server bundle 使用 Node 风格导出模块(Node-style exports)
   output: {
+    path: path.join(process.cwd(), wpSetting.default.serverBundlePath),
     filename: 'server-bundle.js',
     libraryTarget: 'commonjs2'
   },
@@ -23,42 +26,42 @@ module.exports = merge(base, {
   // 并生成较小的 bundle 文件。
   externals: nodeExternals({
     // 不要外置化 webpack 需要处理的依赖模块。
-    // do not externalize CSS files in case we need to import it from a dep
-    whitelist: /\.(css|stylus)$/
+    // 你可以在这里添加更多的文件类型。例如，未处理 *.vue 原始文件，
+    // 你还应该将修改 `global`（例如 polyfill）的依赖模块列入白名单
+    whitelist: /\.(css|s[ac]ss)$/
   }),
   module: {
     rules: [
       {
-        test: /\.css$/i,
+        test: /\.s[ac]ss$/i,
         use: [
-          'vue-style-loader',
-          'css-loader',
           {
-            loader: 'postcss-loader',
+            loader: 'vue-style-loader',
             options: {
-              ident: 'postcss',
-              plugins: [
-                require('autoprefixer')({})
-              ]
+              name: '[name][hash].[ext]'
             }
-          }
-        ]
-      },
-      {
-        test: /\.styl(us)?$/,
-        use: [
-          'vue-style-loader',
-          'css-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: { importLoaders: 1 }
+          },
           {
             loader: 'postcss-loader',
             options: {
               ident: 'postcss',
-              plugins: [
-                require('autoprefixer')({})
+              config: {
+                path: path.join(process.cwd(), 'tools/webpack/config/postcss.config.js')
+              },
+              plugins: loader => [
+                require('postcss-url')(),
+                // require('postcss-import')(),
+                require('postcss-cssnext')(),
+                require('cssnano')(),
+                require('postcss-pxtorem')
               ]
             }
           },
-          'stylus-loader'
+          { loader: 'sass-loader' }
         ]
       }
     ]

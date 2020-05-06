@@ -6,10 +6,11 @@
     <app-footer></app-footer>
   </div>
 </template>
-<style lang="stylus" scoped>
-#router-view
-  display inline-block
-  margin-top 80px
-  vertical-align text-top
-  margin-left 260px
+<style lang="scss" scoped>
+#router-view {
+  display: inline-block;
+  margin-top: 80px;
+  vertical-align: text-top;
+  margin-left: 260px;
+}
 </style>

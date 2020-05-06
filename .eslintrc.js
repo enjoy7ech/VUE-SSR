@@ -51,6 +51,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/no-var-requires': 0,
+    '@typescript-eslint/member-delimiter-style': 0
     
   }
 }

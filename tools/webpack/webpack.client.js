@@ -1,48 +1,49 @@
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const base = require('./webpack.base')
+const path = require('path')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const miniCssExtractPlugin = require('mini-css-extract-plugin')
-
 const isProd = process.env.NODE_ENV === 'production'
+const wpSetting = require('./config/webpack.setting')
 
 const config = merge(base, {
   entry: {
     app: './src/entry-client.js'
   },
+  output: {
+    path: path.join(process.cwd(), wpSetting.default.clientBundlePath),
+    publicPath: '/',
+    filename: '[name].[chunkhash:8].js'
+    // chunkFilename: '[id].chunk.[hash].js'
+  },
   module: {
     rules: [
       {
-        test: /\.css$/i,
+        test: /\.s[ac]ss$/i,
         use: [
           isProd ? miniCssExtractPlugin.loader : 'vue-style-loader',
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: { importLoaders: 1 }
+          },
           {
             loader: 'postcss-loader',
             options: {
               ident: 'postcss',
-              plugins: [
-                require('autoprefixer')({})
-              ]
-            }
-          }
-        ]
-      },
-      {
-        test: /\.styl(us)?$/,
-        use: [
-          isProd ? miniCssExtractPlugin.loader : 'vue-style-loader',
-          'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              ident: 'postcss',
-              plugins: [
-                require('autoprefixer')({})
+              config: {
+                path: path.join(process.cwd(), 'tools/webpack/config/postcss.config.js')
+              },
+              plugins: loader => [
+                require('postcss-url')(),
+                // require('postcss-import')(),
+                require('postcss-cssnext')(),
+                require('cssnano')(),
+                require('postcss-pxtorem')
               ]
             }
           },
-          'stylus-loader'
+          { loader: 'sass-loader' }
         ]
       }
     ]
@@ -62,18 +63,12 @@ const config = merge(base, {
     // extract vendor chunks for better caching
     // 此插件在输出目录中
     // 生成 `vue-ssr-client-manifest.json`
-    new VueSSRClientPlugin()
-  ]
-  .concat(
-    isProd
-      ? [
-          new miniCssExtractPlugin({
-            filename: "[name].css",
-            chunkFilename: "[id].css"
-          })
-        ]
-      : []
-  ),
+    new VueSSRClientPlugin(),
+    new miniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css'
+    })
+  ],
   optimization: {
     // 重要信息：这将 webpack 运行时分离到一个引导 chunk 中，
     // 以便可以在之后正确注入异步 chunk。
@@ -94,29 +89,31 @@ const config = merge(base, {
       // maxInitialRequests: 3,
       // automaticNameDelimiter: '~',
       // name: true,
-      cacheGroups: isProd ? {
-        vendor: {
-          name: 'vendor',
-          test: function(module) {
-            // a module is extracted into the vendor chunk if...
-            return (
-              // it's inside node_modules
-              // and not a CSS file (due to mini-css-extract-plugin limitation)
-              /[\\/]node_modules[\\/]/.test(module.context) && !/\.css$/.test(module.request)
-            )
-          },
-          reuseExistingChunk: true,
-          enforce: true,
-          chunks: "all"
-        }
-        // elementUI: {
-        //   name: "chunk-elementUI", // 单独将 elementUI 拆包
-        //   priority: 20, // 权重要大于 libs 和 app 不然会被打包进 libs 或者 app
-        //   test: /[\\/]node_modules[\\/]element-ui[\\/]/
-        // },
-      } : {
-        //dev
-      }
+      cacheGroups: isProd
+        ? {
+            vendor: {
+              name: 'vendor',
+              test: function(module) {
+                // a module is extracted into the vendor chunk if...
+                return (
+                  // it's inside node_modules
+                  // and not a CSS file (due to mini-css-extract-plugin limitation)
+                  /[\\/]node_modules[\\/]/.test(module.context) && !/\.css$/.test(module.request)
+                )
+              },
+              reuseExistingChunk: true,
+              enforce: true,
+              chunks: 'all'
+            }
+            // elementUI: {
+            //   name: "chunk-elementUI", // 单独将 elementUI 拆包
+            //   priority: 20, // 权重要大于 libs 和 app 不然会被打包进 libs 或者 app
+            //   test: /[\\/]node_modules[\\/]element-ui[\\/]/
+            // },
+          }
+        : {
+            //dev
+          }
     }
   }
 })

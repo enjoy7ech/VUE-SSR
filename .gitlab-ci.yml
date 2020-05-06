@@ -1,0 +1,82 @@
+# variables:
+#   DOCKER_DRIVER: overlay2
+#   # Create the certificates inside this directory for both the server
+#   # and client. The certificates used by the client will be created in
+#   # /certs/client so we only need to share this directory with the
+#   # volume mount in `config.toml`.
+#   DOCKER_TLS_CERTDIR: ""
+#   DOCKER_HOST: tcp://docker:2375/
+
+stages:
+  - test
+  - build
+  - build-image
+  - deploy
+
+cache: &global_cache
+  key: '$CI_COMMIT_REF_SLUG'
+  untracked: true
+  policy: pull
+  paths:
+    - node_modules/
+
+test_job:
+  image: node:12
+  stage: test
+  script:
+    - echo "Start test job"
+    #  --registry=https://registry.npm.taobao.org
+    - npm install --registry=https://registry.npm.taobao.org
+    - npm run eslint
+  cache:
+    # inherit all global cache settings
+    <<: *global_cache
+    # override the policy
+    policy: pull-push
+
+build_job:
+  image: node:12
+  stage: build
+  only:
+    - tags
+  script:
+    - echo "Start build job"
+    - npm run build
+  cache:
+    # inherit all global cache settings
+    <<: *global_cache
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist
+
+build-image_job:
+  stage: build-image
+  only:
+    - tags
+
+  cache:
+    # inherit all global cache settings
+    <<: *global_cache
+
+  # services:
+  #   - docker:19.03.8-dind
+
+  before_script:
+    - docker info
+
+  script:
+    - echo "Start release job"
+    - docker build -t ssr-demo:${CI_COMMIT_TAG} .
+
+deploy_job:
+  stage: deploy
+  only:
+    - tags
+
+  script:
+    - cid=$(docker ps -a -q --filter name=ssr-demo --format="{{.ID}}")
+    - if [ $cid ];then docker stop $cid;docker rm $cid;fi;
+    - docker run -v /var/run/docker.sock:/var/run/docker.sock -d -p 80:8080 --restart always --name="ssr-demo" ssr-demo:${CI_COMMIT_TAG}
+
+  when: manual

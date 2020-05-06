@@ -4,7 +4,7 @@ export default Vue.extend({
   asyncData({ store }: any) {
     return store.dispatch('user/getUser')
   },
-  mounted() {},
+  // mounted() {},
   data() {
     return {}
   },
