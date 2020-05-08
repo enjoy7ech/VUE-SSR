@@ -1,5 +1,5 @@
 export default {
-  publicPath: '/',
-  serverBundlePath: '/dist/ssr-bundle',
-  clientBundlePath: '/dist/ssr-bundle'
+  publicPath: '/client',
+  serverBundlePath: '/dist/ssr-bundle/server',
+  clientBundlePath: '/dist/ssr-bundle/client'
 }

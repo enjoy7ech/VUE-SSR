@@ -2,37 +2,102 @@ const fs = require('fs')
 const path = require('path')
 const LRUCache = require('lru-cache')
 const express = require('express')
+// const session = require('express-session')
+// const bodyParser = require('body-parser')
 const favicon = require('serve-favicon')
 const compression = require('compression')
 const microcache = require('route-cache')
-const resolve = file => path.resolve(__dirname, file)
 const { createBundleRenderer } = require('vue-server-renderer')
-let isProd = true
-if(process.env.NODE_ENV && process.env.NODE_ENV === 'development'){
-  isProd = false
-}
-const useMicroCache = process.env.MICRO_CACHE !== 'false'
 const serverInfo =
   `express/${require('express/package.json').version} ` +
   `vue-server-renderer/${require('vue-server-renderer/package.json').version}`
+const useMicroCache = process.env.MICRO_CACHE !== 'false'
 
-const app = express()
+const resolve = file => path.resolve(__dirname, file)
+const isProd = !(process.env.NODE_ENV && process.env.NODE_ENV === 'development')
 
 function createRenderer(bundle, options) {
   // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
-  return createBundleRenderer(bundle, Object.assign(options, {
-    // for component caching
-    cache: new LRUCache({
-      max: 1000,
-      maxAge: 1000 * 60 * 15
-    }),
-    // this is only needed when vue-server-renderer is npm-linked
-    basedir: resolve('./dist'),
-    // recommended for performance
-    runInNewContext: false
-  }))
+  return createBundleRenderer(
+    bundle,
+    Object.assign(options, {
+      // for component caching
+      cache: new LRUCache({
+        max: 1000,
+        maxAge: 1000 * 60 * 15
+      }),
+      // this is only needed when vue-server-renderer is npm-linked
+      basedir: resolve('./dist'),
+      // recommended for performance
+      runInNewContext: false
+    })
+  )
 }
+const serve = (path, cache) =>
+  express.static(resolve(path), {
+    maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 30 : 0
+  })
+//======================================= express ======================================================
+const app = express()
 
+app.set('trust proxy', 1) // trust first proxy
+app.use(compression({ threshold: 0 }))
+app.use(favicon('./public/favicon.ico'))
+if (isProd) {
+  app.use('/', serve('./ssr-bundle/client', true))
+}
+app.use('/manifest.json', serve('./manifest.json', true))
+// app.use('/service-worker.js', serve('./dist/service-worker.js'))
+
+// since this app has no user-specific content, every page is micro-cacheable.
+// if your app involves user-specific content, you need to implement custom
+// logic to determine whether a request is cacheable based on its url and
+// headers.
+// 1-second microcache.
+// https://www.nginx.com/blog/benefits-of-microcaching-nginx/
+app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
+
+// session init
+// const redis = require('redis')
+// const redisClient = redis.createClient('6379', '127.0.0.1')
+// const RedisStore = require('connect-redis')(session)
+// app.use(
+//   session({
+//     secret: 'zhenxiang property',
+//     store: new RedisStore({
+//       client: redisClient,
+//       ttl: 60 * 60 * 24 * 7 // 7 days
+//     }),
+//     resave: false,
+//     saveUninitialized: true
+//   })
+// )
+
+// // body-parse
+// app.use(
+//   bodyParser.json({
+//     limit: '50000kb'
+//   })
+// )
+// app.use(
+//   bodyParser.raw({
+//     limit: '50000kb'
+//   })
+// )
+// app.use(
+//   bodyParser.urlencoded({
+//     extended: false,
+//     limit: '50000kb'
+//   })
+// )
+// app.use(
+//   bodyParser.text({
+//     type: 'text/xml'
+//   })
+// )
+//======================================= express ======================================================
+
+//======================================= render ======================================================
 let renderer
 let readyPromise
 const templatePath = resolve('./public/templates/index.template.html')
@@ -52,35 +117,10 @@ if (isProd) {
 } else {
   // In development: setup the dev server with watch and hot-reload,
   // and create a new renderer on bundle / index template update.
-  readyPromise = require('./tools/webpack/setup-dev-server')(
-    app,
-    templatePath,
-    (bundle, options) => {
-      renderer = createRenderer(bundle, options)
-    }
-  )
+  readyPromise = require('./tools/webpack/setup-dev-server')(app, templatePath, (bundle, options) => {
+    renderer = createRenderer(bundle, options)
+  })
 }
-
-const serve = (path, cache) => express.static(resolve(path), {
-  maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 30 : 0
-})
-
-app.use(compression({ threshold: 0 }))
-app.use(favicon('./public/favicon.ico'))
-if(isProd){
-  app.use('/', serve('./', true))
-}
-app.use('/manifest.json', serve('./manifest.json', true))
-// app.use('/service-worker.js', serve('./dist/service-worker.js'))
-
-// since this app has no user-specific content, every page is micro-cacheable.
-// if your app involves user-specific content, you need to implement custom
-// logic to determine whether a request is cacheable based on its url and
-// headers.
-// 1-second microcache.
-// https://www.nginx.com/blog/benefits-of-microcaching-nginx/
-app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
-
 function render(req, res) {
   const s = Date.now()
 
@@ -109,17 +149,23 @@ function render(req, res) {
     if (err) {
       return handleError(err)
     }
-    
+
     res.send(html)
     if (!isProd) {
       console.log(`whole request: ${Date.now() - s}ms`)//eslint-disable-line
     }
   })
 }
+//======================================= render ======================================================
 
-app.get('*', isProd ? render : (req, res) => {
-  readyPromise.then(() => render(req, res))
-})
+app.get(
+  '*',
+  isProd
+    ? render
+    : (req, res) => {
+        readyPromise.then(() => render(req, res))
+      }
+)
 
 const port = process.env.PORT || 8080
 app.listen(port, () => {
