@@ -69,5 +69,9 @@ module.exports = {
   },
   plugins: isProd
     ? [new VueLoaderPlugin(), new webpack.optimize.ModuleConcatenationPlugin()]
-    : [new VueLoaderPlugin(), new FriendlyErrorsPlugin()]
+    : [
+        new VueLoaderPlugin(),
+        new FriendlyErrorsPlugin(),
+        new webpack.NamedModulesPlugin() // HMR shows correct file names in console on update.
+      ]
 }
