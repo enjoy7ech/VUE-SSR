@@ -12,6 +12,8 @@ export default {
         }, 2000)
       }).then(() => {
         const user = { userId: '00000000', userName: '帅比' }
+        console.log(user)
+
         commit('setUser', user)
       })
     }

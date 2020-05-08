@@ -23,15 +23,15 @@ export default context => {
 
       // 执行匹配组件中的asyncData
       Promise.all(
-        matchedComponents.map(
-          ({ asyncData }) =>
-            asyncData &&
-            asyncData({
+        matchedComponents.map(Component => {
+          if (Component.options && Component.options.asyncData) {
+            return Component.options.asyncData({
               store,
               route: router.currentRoute,
               req
             })
-        )
+          }
+        })
       )
         .then(() => {
           // 在所有预取钩子(preFetch hook) resolve 后，

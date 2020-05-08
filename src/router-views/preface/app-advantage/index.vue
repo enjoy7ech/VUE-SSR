@@ -1,6 +1,6 @@
 <template>
   <div>
-    12312312s
+    {{ user }}
   </div>
 </template>
 

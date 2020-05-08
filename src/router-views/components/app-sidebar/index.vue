@@ -11,9 +11,17 @@
             <i class="fa fa-angle-down"></i>
           </span>
         </div>
-        <div class="bar-h2" v-for="(item2, index2) in item.children" :key="index2">
+        <router-link
+          class="bar-h2"
+          v-for="(item2, index2) in item.children"
+          :key="index2"
+          :to="{ name: item2.routeName }"
+          active-class="active"
+          exact
+          tag="div"
+        >
           <span class="h2-text">{{ item2.name }}</span>
-        </div>
+        </router-link>
       </div>
     </div>
   </div>

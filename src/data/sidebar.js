@@ -2,19 +2,23 @@ export const menus = [
   {
     name: '前言',
     icon: '',
-    routeName: 'introduction',
+    routeName: 'preface',
     children: [
       {
-        name: 'TypeScript简介'
+        name: 'TypeScript简介',
+        routeName: 'preface-introduction'
       },
       {
-        name: 'TypeScript构建配置'
+        name: 'TypeScript构建配置',
+        routeName: 'preface-building'
       },
       {
-        name: 'TypeScript优势'
+        name: 'TypeScript优势',
+        routeName: 'preface-advantage'
       },
       {
         name: 'TypeScript日常纪录'
+        // routeName: 'preface'
       }
     ]
   },

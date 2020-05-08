@@ -22,5 +22,6 @@
   "stylusSupremacy.insertSemicolons": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+  "typescript.validate.enable": true
 }

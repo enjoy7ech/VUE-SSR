@@ -16,3 +16,14 @@
   margin-left: 260px;
 }
 </style>
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
+  async asyncData() {
+    console.log(123123)
+  },
+  mounted() {
+    console.log(1231231)
+  }
+})
+</script>

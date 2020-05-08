@@ -1,5 +1,8 @@
 <template>
-  <default-layout></default-layout>
+  <!-- <default-layout></default-layout> -->
+  <div>
+    123
+  </div>
 </template>
 
 <script src="./component.ts" lang="ts"></script>

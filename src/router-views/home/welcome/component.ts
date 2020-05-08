@@ -10,7 +10,9 @@ export default Vue.extend({
     this.draw()
   },
   data() {
-    return {}
+    return {
+      a: '123123'
+    }
   },
   methods: {
     draw() {
