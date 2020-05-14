@@ -6,6 +6,7 @@ const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const miniCssExtractPlugin = require('mini-css-extract-plugin')
 const isProd = process.env.NODE_ENV === 'production'
 const wpSetting = require('./config/webpack.setting')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const config = merge(base, {
   entry: {
@@ -36,8 +37,9 @@ const config = merge(base, {
               },
               plugins: loader => [
                 require('postcss-url')(),
+                require('autoprefixer'),
                 // require('postcss-import')(),
-                require('postcss-cssnext')(),
+                // require('postcss-cssnext')(),
                 require('cssnano')(),
                 require('postcss-pxtorem')
               ]
@@ -49,6 +51,8 @@ const config = merge(base, {
     ]
   },
   plugins: [
+    // https://vue-loader.vuejs.org/zh/guide/#%E6%89%8B%E5%8A%A8%E8%AE%BE%E7%BD%AE
+    new VueLoaderPlugin(),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jquery: 'jquery',

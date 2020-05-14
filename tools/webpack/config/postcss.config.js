@@ -3,8 +3,8 @@ module.exports = ({ file, options, env }) => ({
   plugins: {
     'postcss-url': {},
     'postcss-import': {},
-    'postcss-cssnext': true,
-    // autoprefixer: env == 'production' ? options.autoprefixer : false,
+    // 'postcss-cssnext': true,
+    autoprefixer: env == 'production' ? options.autoprefixer : false,
     cssnano: env === 'production' ? options.cssnano : false,
     'postcss-pxtorem': {
       rootValue: 100, // html节点设的font-size大小，由于chrome最小12px，所以基值要设置大写
