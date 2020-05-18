@@ -2,10 +2,10 @@ module.exports = ({ file, options, env }) => ({
   parser: file.extname === '.sss' ? 'sugarss' : false,
   plugins: {
     'postcss-url': {},
-    'postcss-import': {},
+    // 'postcss-import': {},
     // 'postcss-cssnext': true,
-    autoprefixer: env == 'production' ? options.autoprefixer : false,
-    cssnano: env === 'production' ? options.cssnano : false,
+    autoprefixer: options.autoprefixer,
+    cssnano: options.cssnano,
     'postcss-pxtorem': {
       rootValue: 100, // html节点设的font-size大小，由于chrome最小12px，所以基值要设置大写
       unitPrecision: 5, // 转rem精确到小数点多少位

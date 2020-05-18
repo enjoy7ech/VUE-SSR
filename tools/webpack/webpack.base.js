@@ -2,11 +2,10 @@ const path = require('path')
 const webpack = require('webpack')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
-
 const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
-  mode: process.env.NODE_ENV || 'production',
+  mode: process.env.NODE_ENV,
   devtool: isProd ? false : 'cheap-module-source-map',
   resolve: {
     alias: {

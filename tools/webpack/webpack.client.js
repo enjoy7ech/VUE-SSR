@@ -6,7 +6,6 @@ const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const miniCssExtractPlugin = require('mini-css-extract-plugin')
 const isProd = process.env.NODE_ENV === 'production'
 const wpSetting = require('./config/webpack.setting')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const config = merge(base, {
   entry: {
@@ -15,8 +14,8 @@ const config = merge(base, {
   output: {
     path: path.join(process.cwd(), wpSetting.default.clientBundlePath),
     publicPath: '/',
-    filename: '[name].[chunkhash:8].js'
-    // chunkFilename: '[id].chunk.[hash].js'
+    filename: '[name].[contenthash].js',
+    chunkFilename: '[id].chunk.[contenthash].js'
   },
   module: {
     rules: [
@@ -34,15 +33,7 @@ const config = merge(base, {
               ident: 'postcss',
               config: {
                 path: path.join(process.cwd(), 'tools/webpack/config/postcss.config.js')
-              },
-              plugins: loader => [
-                require('postcss-url')(),
-                require('autoprefixer'),
-                // require('postcss-import')(),
-                // require('postcss-cssnext')(),
-                require('cssnano')(),
-                require('postcss-pxtorem')
-              ]
+              }
             }
           },
           { loader: 'sass-loader' }
@@ -51,8 +42,6 @@ const config = merge(base, {
     ]
   },
   plugins: [
-    // https://vue-loader.vuejs.org/zh/guide/#%E6%89%8B%E5%8A%A8%E8%AE%BE%E7%BD%AE
-    new VueLoaderPlugin(),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jquery: 'jquery',
@@ -69,8 +58,8 @@ const config = merge(base, {
     // 生成 `vue-ssr-client-manifest.json`
     new VueSSRClientPlugin(),
     new miniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css'
+      filename: '[name]-[contenthash].min.css',
+      chunkFilename: '[id]-[contenthash].min.css'
     })
   ],
   optimization: {

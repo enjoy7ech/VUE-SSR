@@ -51,14 +51,7 @@ module.exports = merge(base, {
               ident: 'postcss',
               config: {
                 path: path.join(process.cwd(), 'tools/webpack/config/postcss.config.js')
-              },
-              plugins: loader => [
-                require('postcss-url')(),
-                // require('postcss-import')(),
-                require('postcss-cssnext')(),
-                require('cssnano')(),
-                require('postcss-pxtorem')
-              ]
+              }
             }
           },
           { loader: 'sass-loader' }
